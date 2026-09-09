@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 
-export default function Layout({ children, role, setRole }) {
+export default function Layout({ children, session, onLogout }) {
   return (
     <div className="min-h-screen">
       <header className="bg-slate-900 text-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div>
             <h1 className="text-xl font-bold">EthioHire</h1>
             <p className="text-xs text-slate-300">Ethiopia&apos;s Smart Hiring Platform</p>
@@ -14,11 +14,17 @@ export default function Layout({ children, role, setRole }) {
             <Link to="/candidate" className="rounded bg-slate-700 px-3 py-1">Candidate</Link>
             <Link to="/recruiter" className="rounded bg-slate-700 px-3 py-1">Recruiter</Link>
             <Link to="/admin" className="rounded bg-slate-700 px-3 py-1">Admin</Link>
-            <select className="rounded bg-white px-2 py-1 text-slate-900" value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="CANDIDATE">Candidate</option>
-              <option value="RECRUITER">Recruiter</option>
-              <option value="ADMIN">Admin</option>
-            </select>
+          </div>
+          <div className="text-right text-xs text-slate-200">
+            {session?.user ? (
+              <>
+                <p>{session.user.email}</p>
+                <p className="font-semibold">{session.user.role}</p>
+                <button onClick={onLogout} className="mt-1 rounded bg-red-600 px-2 py-1 text-white">Logout</button>
+              </>
+            ) : (
+              <p>Not logged in</p>
+            )}
           </div>
         </div>
       </header>

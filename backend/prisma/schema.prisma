@@ -40,148 +40,150 @@ enum InterviewStatus {
 }
 
 model User {
-  id            String          @id @default(uuid())
-  email         String          @unique
+  id            String            @id @default(uuid())
+  email         String            @unique
   passwordHash  String
   role          UserRole
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   company       CompanyProfile?
   candidate     CandidateProfile?
 }
 
 model CompanyProfile {
-  id                 String       @id @default(uuid())
-  userId              String       @unique
-  companyName         String
-  verificationStatus  String       @default("PENDING")
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
-  user                User         @relation(fields: [userId], references: [id])
-  jobs                JobPosting[]
+  id                String       @id @default(uuid())
+  userId            String       @unique
+  companyName       String
+  verificationStatus String      @default("PENDING")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  user              User         @relation(fields: [userId], references: [id])
+  jobs              JobPosting[]
 }
 
 model CandidateProfile {
-  id               String   @id @default(uuid())
-  userId            String   @unique
-  fullName          String
-  phone             String
-  graduationYear    Int
-  universityName    String
-  degreeLevel       String
-  gpa               Float
-  expectedSalary    Float
-  cvUrl             String?
-  credentialsUrl    String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id])
-  applications      JobApplication[]
-  references        ReferenceContact[]
+  id             String            @id @default(uuid())
+  userId         String            @unique
+  fullName       String
+  phone          String
+  graduationYear Int
+  universityName String
+  degreeLevel    String
+  gpa            Float
+  expectedSalary Float
+  cvUrl          String?
+  credentialsUrl String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  user           User              @relation(fields: [userId], references: [id])
+  applications   JobApplication[]
+  references     ReferenceContact[]
 }
 
 model JobPosting {
-  id                     String   @id @default(uuid())
-  companyId              String
-  title                  String
-  description            String
-  minExperienceYears     Int
-  minGpa                 Float
-  targetGradYearStart    Int
-  targetGradYearEnd      Int
-  allowedDegreeLevels    String[]
-  salaryMin              Float
-  salaryMax              Float
-  knockoutQuestions      Json
-  isOpen                 Boolean  @default(true)
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-  company                CompanyProfile @relation(fields: [companyId], references: [id])
-  applications           JobApplication[]
-  questions              AssessmentQuestion[]
+  id                  String               @id @default(uuid())
+  companyId           String
+  title               String
+  description         String
+  minExperienceYears  Int
+  minGpa              Float
+  targetGradYearStart Int
+  targetGradYearEnd   Int
+  allowedDegreeLevels String[]
+  salaryMin           Float
+  salaryMax           Float
+  knockoutQuestions   Json
+  isOpen              Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  company             CompanyProfile       @relation(fields: [companyId], references: [id])
+  applications        JobApplication[]
+  questions           AssessmentQuestion[]
 }
 
 model JobApplication {
-  id                 String   @id @default(uuid())
-  jobId              String
-  candidateId        String
-  status             ApplicationStatus @default(APPLIED)
-  matchScore         Float    @default(0)
-  preScreenPassed    Boolean  @default(false)
-  preScreenReason    String?
-  attemptCount       Int      @default(0)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  job                JobPosting @relation(fields: [jobId], references: [id])
-  candidate          CandidateProfile @relation(fields: [candidateId], references: [id])
-  proctoringLogs     ProctoringLog[]
-  schedules          InterviewSchedule[]
-  answers            AssessmentAnswer[]
+  id              String            @id @default(uuid())
+  jobId           String
+  candidateId     String
+  status          ApplicationStatus @default(APPLIED)
+  matchScore      Float             @default(0)
+  preScreenPassed Boolean           @default(false)
+  preScreenReason String?
+  attemptCount    Int               @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  job             JobPosting        @relation(fields: [jobId], references: [id])
+  candidate       CandidateProfile  @relation(fields: [candidateId], references: [id])
+  proctoringLogs  ProctoringLog[]
+  schedules       InterviewSchedule[]
+  answers         AssessmentAnswer[]
 
   @@unique([jobId, candidateId])
 }
 
 model AssessmentQuestion {
-  id               String   @id @default(uuid())
-  jobId             String
-  questionText      String
-  questionType      String
-  expectedAnswer    String?
-  timeLimitSeconds  Int
-  createdAt         DateTime @default(now())
-  job               JobPosting @relation(fields: [jobId], references: [id])
-  answers           AssessmentAnswer[]
+  id               String             @id @default(uuid())
+  jobId            String
+  questionText     String
+  questionType     String
+  expectedAnswer   String?
+  timeLimitSeconds Int
+  createdAt        DateTime           @default(now())
+  job              JobPosting         @relation(fields: [jobId], references: [id])
+  answers          AssessmentAnswer[]
 }
 
 model AssessmentAnswer {
-  id               String @id @default(uuid())
-  applicationId     String
-  questionId        String
-  answerText        String
-  score             Float @default(0)
-  submittedAt       DateTime @default(now())
-  application       JobApplication @relation(fields: [applicationId], references: [id])
-  question          AssessmentQuestion @relation(fields: [questionId], references: [id])
+  id            String             @id @default(uuid())
+  applicationId String
+  questionId    String
+  answerText    String
+  score         Float              @default(0)
+  submittedAt   DateTime           @default(now())
+  application   JobApplication     @relation(fields: [applicationId], references: [id])
+  question      AssessmentQuestion @relation(fields: [questionId], references: [id])
+
+  @@unique([applicationId, questionId])
 }
 
 model ProctoringLog {
-  id             String   @id @default(uuid())
-  applicationId   String
-  eventType       ProctoringEventType
-  timestamp       DateTime @default(now())
-  snapshotUrl     String?
-  metadata        Json?
-  application     JobApplication @relation(fields: [applicationId], references: [id])
+  id            String            @id @default(uuid())
+  applicationId String
+  eventType     ProctoringEventType
+  timestamp     DateTime          @default(now())
+  snapshotUrl   String?
+  metadata      Json?
+  application   JobApplication    @relation(fields: [applicationId], references: [id])
 }
 
 model InterviewSchedule {
-  id             String   @id @default(uuid())
-  applicationId   String
-  scheduledTime   DateTime
-  meetingLink     String
-  status          InterviewStatus @default(SCHEDULED)
-  interviewerId   String?
-  scorecard       Json?
-  application     JobApplication @relation(fields: [applicationId], references: [id])
+  id            String           @id @default(uuid())
+  applicationId String
+  scheduledTime DateTime
+  meetingLink   String
+  status        InterviewStatus  @default(SCHEDULED)
+  interviewerId String?
+  scorecard     Json?
+  application   JobApplication   @relation(fields: [applicationId], references: [id])
 }
 
 model ReferenceContact {
-  id               String   @id @default(uuid())
-  candidateId       String
-  name              String
-  email             String
-  relationship      String
-  surveyStatus      String   @default("PENDING")
-  createdAt         DateTime @default(now())
-  candidate         CandidateProfile @relation(fields: [candidateId], references: [id])
+  id           String           @id @default(uuid())
+  candidateId  String
+  name         String
+  email        String
+  relationship String
+  surveyStatus String           @default("PENDING")
+  createdAt    DateTime         @default(now())
+  candidate    CandidateProfile @relation(fields: [candidateId], references: [id])
 }
 
 model AuditLog {
   id         String   @id @default(uuid())
-  userId      String?
-  action      String
-  entityType  String
-  entityId    String?
-  payload     Json?
-  createdAt   DateTime @default(now())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  payload    Json?
+  createdAt  DateTime @default(now())
 }
