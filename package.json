@@ -1,0 +1,26 @@
+{
+  "name": "ethiohire",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test -w backend && npm run test -w frontend",
+    "dev": "npm run dev -w backend & npm run dev -w frontend",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "build": "npm run build -w frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/HailemariamAdugnaw/EthioHire"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "private": "true",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}
