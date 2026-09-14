@@ -1,0 +1,12 @@
+# EthioHire — sandbox LiveKit server (development only)
+port: 7880
+bind_addresses:
+  - 127.0.0.1
+rtc:
+  udp_port: 7882
+  tcp_port: 7881
+  use_external_ip: false
+keys:
+  ethiohire-dev: ethiohire-dev-secret-0123456789abcdef
+logging:
+  level: info

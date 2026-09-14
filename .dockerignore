@@ -1,0 +1,18 @@
+# EthioHire .dockerignore — keeps build contexts small
+node_modules
+**/node_modules
+.next
+.git
+.sandbox
+agent-ctx
+skills
+examples
+upload
+download
+db/pgdata
+backend/django.log
+frontend/dist
+dev.log
+server.log
+worklog.md
+*.zip
